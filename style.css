@@ -1,0 +1,39 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.parallax-container {
+    position: relative;
+    background-image: url('milky-way.jpg');
+    height: 100vh; /* Viewport height */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url('planet-image.jpg');
+    height: 200px; /* Adjust based on your image */
+    width: 200px; /* Adjust based on your image */
+    background-size: cover;
+    background-position: center;
+    will-change: transform; /* Optimizes animations */
+}
+
+.content {
+    position: relative;
+    z-index: 100;
+    text-align: center;
+    color: white;
+}
+
+.text-content {
+    text-align: center;
+    margin-top: 50px;
+}
