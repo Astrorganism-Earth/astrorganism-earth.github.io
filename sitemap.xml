@@ -13,17 +13,12 @@
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://astrorganism.earth/index.html</loc>
-  <lastmod>2024-09-13T20:34:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
   <loc>https://astrorganism.earth/The%20Dawn%20of%20the%20Astrorganism.pdf</loc>
   <lastmod>2024-09-13T20:34:23+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://astrorganism.earth/who.html</loc>
+  <loc>https://astrorganism.earth/who</loc>
   <lastmod>2024-09-13T20:34:23+00:00</lastmod>
   <priority>0.80</priority>
 </url>
