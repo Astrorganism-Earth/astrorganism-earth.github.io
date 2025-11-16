@@ -1,0 +1,301 @@
+/* Global Resets and Variables */
+:root {
+    --primary-color: #1a1a2e;
+    --secondary-color: #0f3460;
+    --accent-color: #4a90e2;
+    --text-color: #333;
+    --light-text-color: #f4f4f4;
+    --bg-color: #ffffff;
+    --alt-bg-color: #f9f9fb;
+    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-stack);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    font-weight: 300;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-weight: 600;
+    margin-bottom: 1em;
+    color: var(--primary-color);
+}
+
+h1 {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5em;
+}
+
+h3 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.3em;
+    margin-bottom: 1.5em;
+}
+
+h4 {
+    font-size: 1.3rem;
+    margin-top: 1em;
+}
+
+p {
+    margin-bottom: 1.5em;
+    font-size: 1.1rem;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* List Styling (Updated for UL) */
+ol, ul {
+    margin-bottom: 1.5em;
+    padding-left: 25px;
+}
+
+li {
+    margin-bottom: 0.5em;
+    font-size: 1.1rem;
+}
+
+/* Header and Navigation */
+header {
+    background-color: var(--bg-color);
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+/* Sections */
+.content-section {
+    padding: 80px 0;
+}
+
+.alt-bg {
+    background-color: var(--alt-bg-color);
+}
+
+/* Hero Section */
+#hero {
+    padding: 100px 0;
+    text-align: left;
+    background-color: var(--bg-color);
+}
+
+#hero .subtitle {
+    font-size: 1.4rem;
+    color: var(--secondary-color);
+    max-width: 800px;
+}
+
+/* Hypothesis Block */
+.hypothesis-block {
+    background-color: var(--alt-bg-color);
+    padding: 30px;
+    margin-top: 30px;
+    border-left: 4px solid var(--secondary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.hypothesis-block h4 {
+    margin-top: 0;
+}
+
+/* Loop Diagram */
+.loop-diagram {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-style: italic;
+    border: 1px solid #eee;
+}
+
+.alt-bg .loop-diagram {
+    background-color: #fff;
+}
+
+
+/* Model and Prescription Blocks */
+.model-block, .prescription-block {
+    background-color: #fff;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.alt-bg .model-block, .alt-bg .prescription-block {
+    background-color: #ffffff;
+}
+
+/* Table Styling (Crucial for the presentation) */
+.table-container {
+    overflow-x: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+thead {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    font-weight: 600;
+}
+
+tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+td.center {
+    text-align: center;
+}
+
+.legend {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    padding: 30px 0;
+    font-size: 0.9rem;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer nav ul {
+    list-style: none; /* Ensure footer nav list has no bullets */
+}
+
+footer nav ul li a {
+    color: var(--light-text-color);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    h1 {
+        margin-bottom: 15px;
+    }
+
+    header nav ul {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        padding-left: 0; /* Remove default padding on mobile nav */
+    }
+
+    header nav ul li {
+        margin-left: 0;
+        margin-right: 15px;
+        margin-bottom: 5px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    .content-section {
+        padding: 60px 0;
+    }
+
+    #hero {
+        padding: 60px 0;
+    }
+
+    footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    footer nav {
+        margin-top: 15px;
+    }
+
+    footer nav ul li {
+         margin-left: 10px;
+         margin-right: 10px;
+    }
+}
