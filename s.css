@@ -7,6 +7,7 @@
     --light-text-color: #f4f4f4;
     --bg-color: #ffffff;
     --alt-bg-color: #f9f9fb;
+    --note-bg-color: #e8f0fe;
     --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
@@ -31,7 +32,7 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
     font-weight: 600;
     margin-bottom: 1em;
     color: var(--primary-color);
@@ -40,6 +41,11 @@ h1, h2, h3, h4 {
 h1 {
     font-size: 1.2rem;
     letter-spacing: 1px;
+}
+
+h1 a {
+    color: var(--primary-color);
+    text-decoration: none;
 }
 
 h2 {
@@ -56,8 +62,15 @@ h3 {
 
 h4 {
     font-size: 1.3rem;
-    margin-top: 1em;
+    margin-top: 2em;
 }
+
+h5 {
+    font-size: 1.1rem;
+    margin-top: 1.5em;
+    font-weight: 700;
+}
+
 
 p {
     margin-bottom: 1.5em;
@@ -74,7 +87,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* List Styling (Updated for UL) */
+/* List Styling */
 ol, ul {
     margin-bottom: 1.5em;
     padding-left: 25px;
@@ -83,6 +96,20 @@ ol, ul {
 li {
     margin-bottom: 0.5em;
     font-size: 1.1rem;
+}
+
+/* Styled list for comparison (EPI/AI) */
+.comparison-list {
+    background-color: #fff;
+    padding: 20px;
+    padding-left: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    list-style-type: disc;
+}
+
+.alt-bg .comparison-list {
+     background-color: #fff;
 }
 
 /* Header and Navigation */
@@ -147,6 +174,11 @@ nav ul li a {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+/* Ensure contrast on white background section */
+#narrative .hypothesis-block {
+     background-color: #f0f0f5; 
+}
+
 .hypothesis-block h4 {
     margin-top: 0;
 }
@@ -180,7 +212,24 @@ nav ul li a {
     background-color: #ffffff;
 }
 
-/* Table Styling (Crucial for the presentation) */
+/* Evolutionary Note */
+.evolutionary-note {
+    background-color: var(--note-bg-color);
+    padding: 20px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--secondary-color);
+}
+
+.evolutionary-note p {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+
+/* Table Styling */
 .table-container {
     overflow-x: auto;
     margin-top: 1em;
@@ -192,6 +241,16 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    background-color: #fff;
+}
+
+caption {
+    caption-side: top;
+    font-weight: 600;
+    padding: 10px;
+    text-align: left;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
 }
 
 th, td {
@@ -239,12 +298,108 @@ footer p {
 }
 
 footer nav ul {
-    list-style: none; /* Ensure footer nav list has no bullets */
+    list-style: none;
 }
 
 footer nav ul li a {
     color: var(--light-text-color);
 }
+
+/* Long Form Styles (For Deep Dive and Planetary Self) */
+body.long-form .container {
+    max-width: 850px; /* Narrower column for readability */
+}
+
+body.long-form main.container {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+body.long-form p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.article-header {
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.article-header h2 {
+    font-size: 2.5rem;
+    line-height: 1.3;
+}
+
+/* Editor's Note (Planetary Self) */
+.editors-note {
+    background-color: var(--alt-bg-color);
+    padding: 30px;
+    margin-bottom: 40px;
+    border-left: 4px solid var(--accent-color);
+    font-style: italic;
+}
+
+.editors-note p {
+    margin-bottom: 1em;
+}
+
+.editors-note p:last-child {
+    margin-bottom: 0;
+}
+
+.editors-note strong {
+    font-style: normal;
+}
+
+
+body.long-form h3 {
+    margin-top: 3em;
+}
+
+body.long-form h4 {
+    font-size: 1.2rem;
+    margin-top: 2em;
+    font-weight: 700;
+}
+
+/* Citations/Superscript */
+sup {
+    font-size: 0.7em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--accent-color);
+}
+
+/* References List */
+.references-list {
+    font-size: 0.9rem;
+    list-style-type: decimal;
+}
+
+.references-list li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.references-list a {
+    word-break: break-word;
+}
+
+/* Visual Aid Description (Deep Dive) */
+.visual-aid-description {
+    background-color: #f0f0f5;
+    padding: 25px;
+    margin: 30px 0;
+    border-left: 4px solid #ccc;
+    font-style: italic;
+}
+
+.visual-aid-description h4 {
+    font-style: normal;
+    font-weight: 600;
+    margin-top: 0;
+}
+
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
@@ -260,7 +415,7 @@ footer nav ul li a {
     header nav ul {
         margin-top: 10px;
         flex-wrap: wrap;
-        padding-left: 0; /* Remove default padding on mobile nav */
+        padding-left: 0;
     }
 
     header nav ul li {
@@ -275,6 +430,11 @@ footer nav ul li a {
 
     h3 {
         font-size: 1.5rem;
+    }
+    
+    h4 {
+        font-size: 1.2rem;
+        margin-top: 1.5em;
     }
 
     .content-section {
@@ -297,5 +457,9 @@ footer nav ul li a {
     footer nav ul li {
          margin-left: 10px;
          margin-right: 10px;
+    }
+    
+    .article-header h2 {
+        font-size: 1.8rem;
     }
 }
