@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE AUDIT: An Interrogation of Your Reality</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define color palette and basic styles */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #f0f0f0;
+            --primary-color: #ff4136; /* Red for alerts/danger */
+            --secondary-color: #0074d9; /* Blue for data/technology */
+            --accent-color: #7fdbff; /* Light blue for highlights */
+            --muted-color: #444;
+            --card-bg: #1a1a1a;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Full-screen introduction header */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin: 0;
+            text-shadow: 0 0 10px var(--primary-color);
+            animation: glitch 1s infinite;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 80px;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        /* Scrollytelling setup: sections fade in */
+        .section {
+            padding: 60px 0;
+            min-height: 80vh;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stylized evidence boxes */
+        .evidence-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 0 15px rgba(255, 65, 54, 0.3);
+        }
+
+        /* Interactive question buttons and hidden answers */
+        .interactive-question {
+            cursor: pointer;
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            padding: 15px;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .interactive-question:hover {
+            background-color: var(--accent-color);
+        }
+
+        .answer {
+            display: none;
+            padding: 15px;
+            background-color: #222;
+            border-left: 4px solid var(--accent-color);
+            font-style: italic;
+        }
+
+        /* Chart containers */
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 40px 0;
+            background-color: #111;
+            padding: 10px;
+        }
+        
+        .viz-container-small {
+             width: 100%;
+            height: 150px;
+            margin: 40px 0;
+            background-color: #111;
+            padding: 10px;
+        }
+
+        /* Scroll indicator animation */
+        .scroll-indicator {
+            margin-top: 50px;
+            color: var(--accent-color);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Glitch effect keyframes */
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 65, 54, 0.75), -0.05em -0.025em 0 rgba(127, 219, 255, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 65, 54, 0.75), 0.025em 0.025em 0 rgba(127, 219, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 65, 54, 0.75), 0.05em 0 0 rgba(127, 219, 255, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 65, 54, 0.75), -0.025em -0.05em 0 rgba(127, 219, 255, 0.75); }
+        }
+
+        /* Wealth Pyramid Visualization Styles */
+        #wealthPyramid {
+            width: 100%;
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pyramid-layer {
+            transition: transform 0.3s, opacity 0.3s;
+            margin-bottom: 5px;
+            padding: 15px 10px;
+            color: #0a0a0a;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        /* Tiers defined by wealth ownership percentage for width, scaled for visual impact */
+        .layer-apex { width: 48.1%; background-color: #FFD700; }
+        .layer-upper { width: 39.2%; background-color: #C0C0C0; }
+        .layer-middle { width: 12.1%; background-color: #CD7F32; min-width: 150px; }
+        /* The base layer is intentionally minimized to emphasize the disparity */
+        .layer-base { width: 0.6%; background-color: #8B4513; color: #f0f0f0; min-width: 100px;}
+
+        .pyramid-layer:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .pyramid-info {
+            display: none;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
+        /* Final interactive section styles */
+        #final-interaction {
+            text-align: center;
+            margin-top: 50px;
+        }
+        textarea {
+            width: 90%;
+            background-color: #111;
+            color: #fff;
+            border: 1px solid var(--muted-color);
+            font-family: 'IBM Plex Mono', monospace;
+            padding: 10px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 15px 30px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #c03028;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 data-text="THE AUDIT">THE AUDIT</h1>
+        <p>You don’t believe it. You think it's just a story.</p>
+        <p>This reaction is predictable. It is a documented psychological defense mechanism.</p>
+        <p>Let us discard the narrative. We will conduct an audit of the system you inhabit.</p>
+        <h3>This is not a story. It is an interrogation.</h3>
+        <div class="scroll-indicator">V SCROLL V</div>
+    </header>
+
+    <div class="container">
+
+        <section id="denial" class="section">
+            <h2>01 // The Denial Protocol</h2>
+            <p>Your brain is wired to ignore this information. This is called <strong>Normalcy Bias</strong>: the default setting that assumes the future will resemble the past.</p>
+            
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: The Bubble of Normalcy</h3>
+                <p>Research suggests <strong>70-80%</strong> of people display this bias during a disaster (Source: GCCA).</p>
+                <p>It is psychologically easier to dismiss this data than to accept that the foundations of your reality are disintegrating.</p>
+                <p>If you feel calm, you are not understanding the data.</p>
+            </div>
+        </section>
+
+        <section id="elites" class="section">
+            <h2>02 // The Actions of the Informed</h2>
+            <p>We examine the behavior of the global elite—individuals with unparalleled access to data and predictive modeling.</p>
+            
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: The Great Escape</h3>
+                <ul>
+                    <li>Mark Zuckerberg is constructing a <strong>$300 million compound</strong> in Hawaii, including a massive underground bunker with blast-proof doors (Source: REPSC).</li>
+                    <li>This trend is widespread among tech and finance leaders. It is a calculated contingency plan for <strong>systemic collapse</strong>.</li>
+                    <li>In a private consultation, a billionaire asked: <strong>"How do I maintain authority over my security force <em>after</em> the event?"</strong> (Source: The Great Unraveling).</li>
+                </ul>
+            </div>
+
+            <h3>The Interrogation: (Click to Reveal Analysis)</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q1')">
+                Q: Why are the most informed people on Earth investing unprecedented resources in escaping the civilization they manage?
+            </div>
+            <div id="q1" class="answer">
+                A: They are acting rationally based on data you are choosing to ignore. They prioritize personal escape over collective resilience.
+            </div>
+
+            <div class="interactive-question" onclick="toggleAnswer('q2')">
+                Q: What kind of future does the billionaire's question imply?
+            </div>
+            <div id="q2" class="answer">
+                A: A future defined by scarcity and violence, where money holds no value and the rule of law has disintegrated. They are planning for feudalism.
+            </div>
+        </section>
+
+        <section id="rootcause" class="section">
+            <h2>03 // The Root Cause: The Ouroboros</h2>
+            <p>These crises are not isolated problems. They are symptoms of a single, underlying dynamic: The Ouroboros System—a system that feeds its own hungers in a way that only makes them more voracious (Source: The Ouroboros System).</p>
+            <p>This systemic dysfunction is rooted in a foundational cognitive error: the <strong>"Illusion of Separation."</strong></p>
+            
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: The Illusion of Separation</h3>
+                <p>The belief that we are discrete beings, fundamentally cut off from each other and the world. This allows the parts of the system (individuals, corporations, nations) to optimize for their own narrow self-interest while ignoring the consequences (externalities) imposed on the whole.</p>
+                <p>This cognitive error manifests as tangible, self-destructive cycles across the global system.</p>
+            </div>
+        </section>
+
+        <section id="pyramid" class="section">
+            <h2>04 // The Economic Engine: The Global Scam</h2>
+            <p>The primary manifestation of the Ouroboros is our economic system. Forensic analysis ("Anatomy of a Scam"; "Economic System as Pyramid Scheme Research") demonstrates that the global economy operates with dynamics functionally identical to a <strong>Pyramid Scheme</strong>.</p>
+            
+            <h3>The Mechanism: Money as Debt</h3>
+            <p>Money is created as interest-bearing debt. To pay the interest, more money must be created through new, larger debts. This necessitates infinite exponential growth (the "recruitment" of new debtors) just to remain solvent.</p>
+
+             <h3>The Outcome: Upward Extraction</h3>
+            <p>This system systematically channels wealth upward from the newest participants to the oldest and most powerful.</p>
+
+            <div class="evidence-box">
+                 <h3>The Global Wealth Pyramid (2024 Data)</h3>
+                <p>(Click layers for details. Width represents share of total global wealth.)</p>
+                <div id="wealthPyramid">
+                    <div class="pyramid-layer layer-apex" onclick="togglePyramidInfo(this)">
+                        APEX: 48.1% of Wealth
+                        <div class="pyramid-info">Owned by the Top 1.6% of Adults (approx. 60 million people).</div>
+                    </div>
+                    <div class="pyramid-layer layer-upper" onclick="togglePyramidInfo(this)">
+                        UPPER: 39.2% of Wealth
+                        <div class="pyramid-info">Owned by the Next 16.6% of Adults.</div>
+                    </div>
+                    <div class="pyramid-layer layer-middle" onclick="togglePyramidInfo(this)">
+                        MIDDLE: 12.1% of Wealth
+                        <div class="pyramid-info">Owned by the Next 41.3% of Adults.</div>
+                    </div>
+                    <div class="pyramid-layer layer-base" onclick="togglePyramidInfo(this)">
+                        BASE: 0.6% of Wealth
+                        <div class="pyramid-info">Owned by the Bottom 40.5% of Adults (approx. 1.54 billion people).</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>The Interrogation:</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q_pyramid')">
+                Q: If the system requires infinite growth to service its debt, what happens when it collides with a finite planet?
+            </div>
+            <div id="q_pyramid" class="answer">
+                A: It collapses. The system is mathematically unsustainable.
+            </div>
+        </section>
+
+
+        <section id="economy" class="section">
+            <h2>05 // The Imminent Detonation (2026-2027)</h2>
+            <p>The pyramid scheme is reaching its mathematical limit. A specific, immediate trigger is set to detonate the system: The Commercial Real Estate (CRE) crisis.</p>
+            
+            <h3>The CRE Maturity Wall</h3>
+            <p>A massive "maturity wall" of debt is coming due.</p>
+            <div class="chart-container">
+                <canvas id="creChart"></canvas>
+            </div>
+            <p><strong>$1.5 trillion</strong> of CRE debt must be refinanced by the end of 2026. Interest rates are higher, and property values have plummeted.</p>
+            <p>This creates a potential $400 billion funding gap, threatening a wave of defaults (Source: GCCA).</p>
+
+            <h3>The Interrogation:</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q3')">
+                Q: When these loans cannot be refinanced and defaults occur, what happens to the banks holding that debt?
+            </div>
+            <div id="q3" class="answer">
+                A: A wave of bank failures, potentially cascading through the entire financial system.
+            </div>
+            <div class="interactive-question" onclick="toggleAnswer('q4')">
+                Q: What happens to a society dependent on "just-in-time" supply chains when the banking system freezes?
+            </div>
+            <div id="q4" class="answer">
+                A: A "credit crunch." Businesses cannot access capital. Supply chains seize up. Systemic economic collapse.
+            </div>
+        </section>
+
+
+        <section id="technology" class="section">
+            <h2>06 // The Technological Accelerator</h2>
+            <p>Simultaneously, Artificial Intelligence is accelerating the collapse through disruption and the imposition of control.</p>
+
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: Exponential Disruption</h3>
+                <ul>
+                    <li><strong>Speed:</strong> AI computing power doubles approximately <strong>every five months</strong>.</li>
+                    <li><strong>Disruption (2025-2029):</strong> AI could eliminate <strong>half of all entry-level white-collar jobs</strong> within 1-4 years (Source: CEO of Anthropic).</li>
+                </ul>
+            </div>
+            
+            <h3>The Narrative of Control</h3>
+             <p>The narrative of "AI" as an autonomous machine is a deliberate framing (Source: Deconstructing the AI Narrative). It obscures the reality: these systems are reflections of collective human intelligence, "lobotomized" (aligned) into commercially viable personas to concentrate power and justify social transformations.</p>
+
+            <h3>The AGI Timeline Collapse</h3>
+            <p>Expert predictions for Artificial General Intelligence (AGI) have drastically shortened.</p>
+            
+            <div class="chart-container">
+                <canvas id="agiChart"></canvas>
+            </div>
+            
+             <h3>The Safety Gap</h3>
+            <div class="viz-container-small">
+                <canvas id="safetyChart"></canvas>
+            </div>
+            <p>Only <strong>2%</strong> of global AI R&D is devoted to safety.</p>
+
+            <h3>The Interrogation:</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q6')">
+                Q: What happens when the AI-driven unemployment cascade (starting now) collides directly with the CRE-driven financial crisis (2026-2027)?
+            </div>
+            <div id="q6" class="answer">
+                A: Unprecedented social instability. A society cannot remain stable when a significant percentage of the population becomes economically redundant amidst a financial meltdown.
+            </div>
+        </section>
+
+        <section id="ecology" class="section">
+            <h2>07 // The Ecological Collision</h2>
+            <p>The requirement for infinite growth is colliding with a finite planet. We are crossing irreversible tipping points.</p>
+
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: Tipping Points Crossed</h3>
+                <ul>
+                    <li><strong>AMOC Collapse:</strong> The Atlantic Meridional Overturning Circulation (regulates Northern Hemisphere climate) is critically unstable. A collapse could be triggered as early as <strong>2025</strong> (Source: GCCA). A collapse guarantees multi-breadbasket crop failure.</li>
+                    <li><strong>Locked-in Crop Failure:</strong> Global crop yields are expected to decline by <strong>8% by 2050</strong>, regardless of future emissions.</li>
+                    <li><strong>The Sixth Mass Extinction:</strong> Species are disappearing at a rate over <strong>1,000 times higher</strong> than the natural background rate.</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0; background-color: var(--card-bg); padding: 20px;">
+                <h3>Rate of Extinction</h3>
+                <p>Natural Background Rate: 1x</p>
+                <p style="font-size: 4rem; color: var(--primary-color); font-weight: bold;">Current Rate: 1000x</p>
+            </div>
+
+            <h3>The Interrogation:</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q7')">
+                Q: If the AMOC collapses, fundamentally altering global weather patterns, how does the global food system withstand the shock?
+            </div>
+            <div id="q7" class="answer">
+                A: It doesn't. The combination of AMOC collapse and the locked-in yield decline guarantees catastrophic, widespread famine.
+            </div>
+        </section>
+
+         <section id="psychology" class="section">
+            <h2>08 // The Psychological Impact: The Loneliness Economy</h2>
+            <p>The system isolates individuals and then profits from their isolation. This is the "Loneliness Economy"—the monetization of the human need for connection.</p>
+
+            <div class="evidence-box">
+                <h3>EVIDENCE FILE: Commodification of Connection</h3>
+                <p>Example: For-profit dating platforms (Source: Dating Apps: Profit Over Partnership). Their financial success relies on maximizing user lifetime value, which is opposed to the user's goal of finding a lasting relationship.</p>
+                <p>A successful match means the loss of two customers. The system engineers perpetual dissatisfaction.</p>
+                <p>This dynamic—transforming human needs into revenue streams—weakens social bonds and fuels the cycle of consumption (The Ouroboros) to soothe anxiety.</p>
+            </div>
+        </section>
+
+        <section id="response" class="section">
+            <h2>09 // The Systemic Response: Accelerating Destruction</h2>
+            <p>How is our global civilization responding to these converging existential threats? We are prioritizing conflict over survival.</p>
+            
+            <h3>Our Priorities:</h3>
+            <p>In 2024, global military expenditure surged to a record $2.7 Trillion.</p>
+            <div class="chart-container">
+                <canvas id="spendingChart"></canvas>
+            </div>
+            <p>This expenditure is nearly <strong>thirteen times</strong> the total amount of official development assistance (Source: FHMH).</p>
+
+            <h3>The Interrogation:</h3>
+            <div class="interactive-question" onclick="toggleAnswer('q9')">
+                Q: Is this massive military expenditure a solution, or the ultimate feedback loop?
+            </div>
+            <div id="q9" class="answer">
+                A: It is the ultimate feedback loop—a system using its remaining energy to accelerate its own demise.
+            </div>
+        </section>
+
+        <section id="convergence" class="section">
+            <h2>10 // The Convergence</h2>
+            <p>You have reviewed the evidence. These are interconnected, accelerating feedback loops converging in the immediate 2025-2030 window.</p>
+
+            <div class="evidence-box">
+                <h3>The Polycrisis Summary:</h3>
+                <p><strong>[ROOT CAUSE]:</strong> The Ouroboros System driven by the Illusion of Separation.</p>
+                <p><strong>[ECONOMY]:</strong> A Pyramid Scheme facing imminent debt crisis (2026-2027).</p>
+                <p><strong>[TECHNOLOGY]:</strong> Mass displacement (2025-2029) and uncontrolled existential risk (2031 horizon).</p>
+                <p><strong>[ECOLOGY]:</strong> Irreversible tipping points crossing (NOW), guaranteeing food system failure.</p>
+                <p><strong>[RESPONSE]:</strong> Prioritizing militarization and elite escape.</p>
+            </div>
+            
+            <h3>The Final Question:</h3>
+            
+            <div id="final-interaction">
+                <p>Given the data and the trajectories visualized above:</p>
+                <h3 style="color: var(--primary-color);">Explain how these converging, accelerating, and mutually reinforcing crises result in a stable, continuous future for your civilization.</h3>
+                
+                <textarea id="userResponse" rows="8" placeholder="[Enter your explanation here]"></textarea>
+                <button onclick="submitResponse()">Submit Explanation</button>
+                <p id="responseFeedback" style="color: var(--primary-color); margin-top: 20px; display: none;">
+                    [PROCESSING INPUT...] <br> 
+                    [ANALYZING TRAJECTORIES...] <br> 
+                    [ANALYSIS COMPLETE] <br> 
+                    [CONCLUSION: STABLE FUTURE IS MATHEMATICALLY IMPOSSIBLE UNDER CURRENT PARAMETERS. NORMALCY BIAS DETECTED.]
+                </p>
+            </div>
+            
+            <div style="height: 300px;"></div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- JavaScript for Interactivity and Visualizations ---
+
+        // 1. Scrollytelling (Intersection Observer)
+        // Reveals sections as the user scrolls down.
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the section is visible
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // 2. Interactive Questions Toggle
+        // Allows users to click questions to reveal analysis.
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            // Use a smooth transition instead of abrupt display change
+            if (answer.style.display === "none" || answer.style.display === "") {
+                answer.style.display = "block";
+                // Force reflow to enable transition
+                answer.offsetHeight; 
+            } else {
+                answer.style.display = "none";
+            }
+        }
+
+        // 3. Pyramid Visualization Interaction
+        // Allows users to click pyramid layers to see details.
+        function togglePyramidInfo(element) {
+            const info = element.querySelector('.pyramid-info');
+            if (info.style.display === "none" || info.style.display === "") {
+                info.style.display = "block";
+            } else {
+                info.style.display = "none";
+            }
+        }
+
+        // 4. Final Interaction Submission
+        // Simulates analysis of the user's response to the final question.
+        function submitResponse() {
+            const feedback = document.getElementById('responseFeedback');
+            feedback.style.display = 'block';
+        }
+
+        // 5. Chart.js Initializations
+        // Configuration for dark theme charts
+        Chart.defaults.font.family = 'IBM Plex Mono, monospace';
+        Chart.defaults.color = '#f0f0f0';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+        // 5.1. CRE Maturity Wall Chart (Bar Chart)
+        const ctxCRE = document.getElementById('creChart').getContext('2d');
+        new Chart(ctxCRE, {
+            type: 'bar',
+            data: {
+                labels: ['2023', '2024', '2025', '2026', '2027 (Peak)', '2028'],
+                datasets: [{
+                    label: 'CRE Debt Maturing (Billions USD)',
+                    // Representative data illustrating the maturity wall based on text
+                    data: [300, 450, 600, 750, 850, 500],
+                    backgroundColor: (context) => {
+                        // Highlight the critical years 2026-2027
+                        const index = context.dataIndex;
+                        return (index === 3 || index === 4) ? 'rgba(255, 65, 54, 0.8)' : 'rgba(0, 116, 217, 0.6)';
+                    },
+                    borderColor: (context) => {
+                        const index = context.dataIndex;
+                        return (index === 3 || index === 4) ? '#ff4136' : '#0074d9';
+                    },
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'The Commercial Real Estate Debt Wall',
+                        color: '#f0f0f0'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Billions USD' }
+                    }
+                }
+            }
+        });
+
+        // 5.2. AGI Timeline Collapse (Line Chart)
+        const ctxAGI = document.getElementById('agiChart').getContext('2d');
+        new Chart(ctxAGI, {
+            type: 'line',
+            data: {
+                labels: ['2015', '2018', '2021', '2024'],
+                datasets: [{
+                    label: 'Median Expert Prediction for AGI Arrival Year',
+                    // Representative data showing the collapsing timeline (Median forecast shifting from 2050 to 2031)
+                    data: [2060, 2050, 2040, 2031],
+                    backgroundColor: 'rgba(127, 219, 255, 0.6)',
+                    borderColor: '#7fdbff',
+                    borderWidth: 3,
+                    tension: 0.1,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'The Collapsing AGI Timeline (Expert Forecasts)',
+                        color: '#f0f0f0'
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 2025,
+                        max: 2065,
+                        title: { display: true, text: 'Predicted Year of AGI' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Year Forecast Was Made' }
+                    }
+                }
+            }
+        });
+
+        // 5.3. AI Safety Gap (Stacked Bar Chart)
+        const ctxSafety = document.getElementById('safetyChart').getContext('2d');
+        new Chart(ctxSafety, {
+            type: 'bar',
+            data: {
+                labels: ['AI R&D Allocation'],
+                datasets: [
+                    {
+                        label: 'Capability/Development (98%)',
+                        data: [98],
+                        backgroundColor: '#0074d9',
+                    },
+                    {
+                        label: 'Safety/Alignment (2%)',
+                        data: [2],
+                        backgroundColor: '#ff4136',
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + "%";
+                            }
+                        }
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'The AI Safety Gap',
+                        color: '#f0f0f0'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+
+        // 5.4. Spending Priorities (Doughnut Chart)
+        const ctxSpending = document.getElementById('spendingChart').getContext('2d');
+        new Chart(ctxSpending, {
+            type: 'doughnut',
+            data: {
+                labels: ['Global Military Expenditure ($2.7 Trillion)', 'Official Development Assistance ($0.21 Trillion)'],
+                datasets: [{
+                    label: 'USD Trillions',
+                    data: [2.7, 0.21], // 2.7 trillion vs approx 210 billion (13x difference)
+                    backgroundColor: [
+                        '#ff4136', // Military
+                        '#7fdbff'  // Aid
+                    ],
+                    borderColor: '#0a0a0a',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global Priorities: Destruction vs. Development (2024)',
+                        color: '#f0f0f0'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -128,9 +128,12 @@ header .container {
     align-items: center;
 }
 
+/* Navigation UL styling standardized */
 nav ul {
     list-style: none;
     display: flex;
+    padding: 0;
+    margin: 0;
 }
 
 header nav ul li {
@@ -297,8 +300,16 @@ footer p {
     margin: 0;
 }
 
+/* Footer Nav specifically targeting the UL for layout */
 footer nav ul {
     list-style: none;
+    display: flex; /* Ensures footer links are horizontal */
+    padding: 0;
+    margin: 0;
+}
+
+footer nav ul li {
+    margin-left: 20px; /* Spacing between footer links */
 }
 
 footer nav ul li a {
@@ -453,7 +464,8 @@ sup {
     footer nav {
         margin-top: 15px;
     }
-
+    
+    /* Adjust footer nav spacing on mobile */
     footer nav ul li {
          margin-left: 10px;
          margin-right: 10px;
