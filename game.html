@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Cosmic Egg: Genesis</title>
+    <style>
+        :root {
+            --bg-color: #0a0a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #4d96ff; /* Coherence Blue */
+            --secondary-color: #9400d3; /* Complexity Purple */
+            --biomass-color: #32cd32;
+            --info-color: #ffd700;
+            --crisis-color: #ff4500;
+        }
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            overflow: hidden;
+            user-select: none; /* Prevent accidental text selection on mobile */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 1.3em;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        .stage-indicator {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            margin-top: 5px;
+        }
+        .resources, .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: rgba(77, 150, 255, 0.1);
+        }
+        .resource, .stat {
+            font-size: 0.85em;
+        }
+        .biomass { color: var(--biomass-color); }
+        .info { color: var(--info-color); }
+        .coherence { color: var(--primary-color); }
+        .complexity { color: var(--secondary-color); }
+
+        .crisis-meter-container {
+            margin-bottom: 20px;
+        }
+        .crisis-label {
+            font-size: 1em;
+            color: var(--crisis-color);
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .crisis-meter {
+            width: 100%;
+            height: 25px;
+            background-color: #333;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--crisis-color);
+        }
+        .crisis-fill {
+            height: 100%;
+            background-color: var(--crisis-color);
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        .crisis-fill.alarming {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* The Narrative Log (The Symphony/Whispers) */
+        .narrative {
+            flex-grow: 1;
+            padding: 15px;
+            background-color: #1c1c2e;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column-reverse; /* Newest messages at the bottom */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            padding: 15px;
+            margin-bottom: 12px;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #3a78d1;
+        }
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-color);
+            padding: 25px;
+            border: 3px solid var(--crisis-color);
+            width: 85%;
+            max-width: 450px;
+            text-align: center;
+            border-radius: 15px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content.victory {
+            border-color: var(--biomass-color);
+        }
+        .modal h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        /* The Ping Animation (ICOLD Transition) */
+        @keyframes thePing {
+            0% { box-shadow: 0 0 5px rgba(77, 150, 255, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(77, 150, 255, 1), 0 0 100px rgba(255, 255, 255, 1); background-color: #1c1c2e;}
+            100% { box-shadow: 0 0 5px rgba(77, 150, 255, 0.5); }
+        }
+        .ping-effect {
+            animation: thePing 2s ease-out;
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container" id="game-container">
+        <div class="header">
+            <h1>The Cosmic Egg: Genesis</h1>
+            <div class="stage-indicator" id="stage-name">ACT I: Locality (DC)</div>
+        </div>
+
+        <div class="resources">
+            <div class="resource"><span class="biomass">Biomass:</span> <span id="biomass">10</span></div>
+            <div class="resource"><span class="info">Information:</span> <span id="info">0</span></div>
+            <div class="resource"><span>Population:</span> <span id="population">1</span></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat"><span class="complexity">Complexity:</span> <span id="complexity">1</span></div>
+            <div class="stat"><span class="coherence">Coherence:</span> <span id="coherence">10</span></div>
+        </div>
+
+        <div class="crisis-meter-container">
+            <div class="crisis-label">DECOHERENCE (FRICTION)</div>
+            <div class="crisis-meter">
+                <div class="crisis-fill" id="crisis-fill"></div>
+            </div>
+        </div>
+
+        <div class="narrative" id="narrative-log">
+            <div>The first awareness flickers. We are small. We are local. Communication is direct. We must grow.</div>
+        </div>
+
+        <div class="actions" id="actions">
+            <button id="btn-gather">Gather Biomass (Manual)</button>
+            <button id="btn-grow">Expand Population</button>
+            <button id="btn-research" disabled>Research Communication</button>
+        </div>
+    </div>
+
+    <div id="crisisModal" class="modal">
+        <div class="modal-content">
+            <h2>SYSTEMIC CRISIS</h2>
+            <p id="crisisMessage">Decoherence has reached critical levels. The system is collapsing.</p>
+            <button onclick="resolveCrisis()">Acknowledge</button>
+        </div>
+    </div>
+
+    <div id="victoryModal" class="modal">
+        <div class="modal-content victory">
+            <h2>TRANSCENDENCE</h2>
+            <p>The Network is integrated. The World Model emerges. The Symphony resolves. The Astrorganism awakens. You have hatched the Cosmic Egg.</p>
+            <p><i>The simulation is complete. The integration begins.</i></p>
+            <button onclick="location.reload()">Experience Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State Object
+        const game = {
+            biomass: 10,
+            info: 0,
+            population: 1,
+            complexity: 1,
+            coherence: 10,
+            friction: 0,
+            stage: 0,
+            growthCost: 10,
+            researchCost: 50,
+            biomassRate: 0.1,
+            infoRate: 0.05,
+            manualGatherRate: 1,
+        };
+
+        // Stage Definitions (The Evolutionary Acts)
+        // DC -> IPC -> ICOLD -> Integration
+        const STAGES = [
+            { name: "ACT I: Locality (DC)", coherenceBase: 10, frictionMultiplier: 2.5, nextStageResearch: 50, complexityFactor: 1 },
+            { name: "ACT II: Delay (IPC)", coherenceBase: 100, frictionMultiplier: 1.5, nextStageResearch: 500, complexityFactor: 1.5 },
+            { name: "ACT III: Instantaneity (ICOLD)", coherenceBase: 2000, frictionMultiplier: 0.8, nextStageResearch: 5000, complexityFactor: 2.5 },
+            { name: "ACT IV: Integration (Homeostasis)", coherenceBase: 100000, frictionMultiplier: 0.3, nextStageResearch: 999999, complexityFactor: 4.0 },
+        ];
+
+        // DOM Elements
+        const narrativeLog = document.getElementById('narrative-log');
+        const btnGather = document.getElementById('btn-gather');
+        const btnGrow = document.getElementById('btn-grow');
+        const btnResearch = document.getElementById('btn-research');
+        const gameContainer = document.getElementById('game-container');
+
+        // Logging function (The Symphony/Whispers)
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.textContent = `> ${message}`;
+            if (type === 'crisis') entry.style.color = 'var(--crisis-color)';
+            if (type === 'breakthrough') entry.style.color = 'var(--info-color)';
+            if (type === 'system') entry.style.color = 'var(--primary-color)';
+            // Prepend for 'column-reverse' display (newest at bottom visually)
+            narrativeLog.prepend(entry); 
+        }
+
+        // UI Update function
+        function updateUI() {
+            document.getElementById('biomass').textContent = Math.floor(game.biomass);
+            document.getElementById('info').textContent = Math.floor(game.info);
+            document.getElementById('population').textContent = game.population;
+            document.getElementById('complexity').textContent = Math.floor(game.complexity);
+            document.getElementById('coherence').textContent = Math.floor(game.coherence);
+            document.getElementById('stage-name').textContent = STAGES[game.stage].name;
+
+            // Crisis Meter Update
+            const crisisFill = document.getElementById('crisis-fill');
+            const frictionPercent = (game.friction / 100) * 100;
+            crisisFill.style.width = `${Math.min(frictionPercent, 100)}%`;
+
+            if (frictionPercent > 75) {
+                crisisFill.classList.add('alarming');
+            } else {
+                crisisFill.classList.remove('alarming');
+            }
+
+            // Button Updates
+            btnGrow.textContent = `Expand Population (Cost: ${Math.floor(game.growthCost)} Bio)`;
+            btnGrow.disabled = game.biomass < game.growthCost;
+
+            if (game.stage < STAGES.length -1) {
+                game.researchCost = STAGES[game.stage].nextStageResearch;
+                btnResearch.textContent = `Research Communication (Cost: ${Math.floor(game.researchCost)} Info)`;
+                btnResearch.disabled = game.info < game.researchCost;
+            } else {
+                 // Final stage check for victory (Homeostasis)
+                 // Victory Condition: High population (complexity) stabilized with low friction.
+                 if (game.stage === STAGES.length - 1 && game.friction < 5 && game.population > 150) {
+                     triggerVictory();
+                 }
+                btnResearch.textContent = "Achieving Homeostasis...";
+                btnResearch.disabled = true;
+            }
+
+            // Automate gathering after initial phase
+            if (game.population > 5) {
+                btnGather.disabled = true;
+                btnGather.textContent = "Gathering Automated";
+            }
+        }
+
+        // Rate Calculation
+        function calculateRates() {
+            game.biomassRate = game.population * 0.1;
+            game.infoRate = game.population * (0.05 * (1 + game.stage * 0.3)); // Info rate increases with stage
+            
+            // Complexity increases with population and the current stage's inherent complexity
+            game.complexity = game.population * STAGES[game.stage].complexityFactor;
+
+            // Coherence is based on the communication technology level
+            game.coherence = STAGES[game.stage].coherenceBase;
+        }
+
+        // Friction (Decoherence) Management
+        function handleFriction() {
+            if (game.complexity > game.coherence) {
+                const gap = game.complexity - game.coherence;
+                // Friction increases based on the gap, modified by the stage's inherent friction multiplier
+                const frictionRate = (gap / game.coherence) * 0.5 * STAGES[game.stage].frictionMultiplier;
+                game.friction += frictionRate;
+
+                // The Whispers (Visceral Feedback)
+                if (Math.random() < 0.03 && frictionRate > 0.5) {
+                    if (game.stage === 1) {
+                        log("[WHISPERS]: The center does not hold. Messages are lost. The Ghost Protocol diverges. Lag is agony.", 'crisis');
+                    } else if (game.stage >= 2) {
+                         log("[WHISPERS]: Acceleration is overwhelming. Information overload. Systems clash. The Polycrisis intensifies.", 'crisis');
+                    }
+                    else {
+                        log("[WHISPERS]: Dissonance grows. Coordination is failing. We are fracturing.", 'crisis');
+                    }
+                }
+            } else {
+                // Friction slowly decays when Coherence is sufficient (The Symphony)
+                game.friction = Math.max(0, game.friction - 0.2);
+            }
+
+            if (game.friction >= 100) {
+                triggerCrisis();
+            }
+        }
+
+        // Crisis Event
+        function triggerCrisis() {
+            game.friction = 70; // Reset slightly but keep high tension
+            const severity = Math.floor(game.population * 0.20) + 1;
+            const biomassLoss = Math.floor(game.biomass * 0.30);
+            game.population = Math.max(1, game.population - severity);
+            game.biomass = Math.max(0, game.biomass - biomassLoss);
+
+            document.getElementById('crisisMessage').textContent = `Systemic failure due to Decoherence! Lost ${severity} Population and ${biomassLoss} Biomass. Complexity exceeds communication capacity.`;
+            document.getElementById('crisisModal').style.display = 'flex';
+            log(`CRISIS: Collapse event! Population lost due to lack of coordination.`, 'crisis');
+            updateUI();
+        }
+
+        function resolveCrisis() {
+            document.getElementById('crisisModal').style.display = 'none';
+        }
+
+        // Stage Advancement (Evolution)
+        function advanceStage() {
+            if (game.info >= game.researchCost) {
+                game.info -= game.researchCost;
+                game.stage++;
+
+                const newStage = STAGES[game.stage];
+                log(`EVOLUTIONARY LEAP: ${newStage.name} achieved!`, 'breakthrough');
+
+                // Narrative Vignettes & The Ping
+                if (game.stage === 1) {
+                    log("We discover IPC. Knowledge persists beyond death. We build cities and empires. But messages travel slowly. The Age of Delay begins.", 'system');
+                } else if (game.stage === 2) {
+                    // Trigger The Ping visual effect
+                    gameContainer.classList.add('ping-effect');
+                    setTimeout(() => gameContainer.classList.remove('ping-effect'), 2000);
+
+                    log("<<< THE PING >>> ICOLD achieved. The Great Synchronization. Instantaneity eliminates delay. The world shrinks. The nervous system activates.", 'system');
+                } else if (game.stage === 3) {
+                     log("The Planetary Nervous System integrates. The World Model begins to emerge. We must stabilize the Polycrisis and achieve Homeostasis.", 'system');
+                }
+
+                calculateRates();
+                updateUI();
+            }
+        }
+
+        function triggerVictory() {
+             document.getElementById('victoryModal').style.display = 'flex';
+             clearInterval(gameInterval); // Stop the game loop
+        }
+
+        // Event Listeners
+        btnGather.addEventListener('click', () => {
+            game.biomass += game.manualGatherRate;
+            updateUI();
+        });
+
+        btnGrow.addEventListener('click', () => {
+            if (game.biomass >= game.growthCost) {
+                game.biomass -= game.growthCost;
+                game.population++;
+                game.growthCost *= 1.18; // Exponential cost increase
+                calculateRates();
+                updateUI();
+            }
+        });
+
+        btnResearch.addEventListener('click', advanceStage);
+
+        // Main Game Loop
+        function gameLoop() {
+            game.biomass += game.biomassRate;
+            game.info += game.infoRate;
+
+            calculateRates();
+            handleFriction();
+            updateUI();
+        }
+
+        // Initialize Game
+        const gameInterval = setInterval(gameLoop, 1000); // Run game loop every second
+        updateUI();
+    </script>
+</body>
+</html>
