@@ -3,453 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Cosmic Egg: Genesis</title>
+    <title>The Cosmic Egg: A Symphony of Becoming</title>
     <style>
         :root {
-            --bg-color: #0a0a1a;
+            --bg-color: #121212;
             --text-color: #e0e0e0;
-            --primary-color: #4d96ff; /* Coherence Blue */
-            --secondary-color: #9400d3; /* Complexity Purple */
-            --biomass-color: #32cd32;
-            --info-color: #ffd700;
-            --crisis-color: #ff4500;
+            --accent-color: #4ec9b0; /* Gaia Green - Coherence */
+            --crisis-color: #ff6b6b; /* Friction Red */
+            --ui-bg: #1e1e1e;
+            --ui-border: #333;
         }
         body {
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 15px;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            height: 95vh;
-            overflow: hidden;
-            user-select: none; /* Prevent accidental text selection on mobile */
+            height: 100vh;
+            box-sizing: border-box;
+            /* The Visceral Feedback mechanism (Blur/Contrast) */
+            transition: filter 0.5s ease-in-out;
         }
-        .container {
+        #game-container {
             display: flex;
             flex-direction: column;
-            height: 100%;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        h1 {
-            font-size: 1.3em;
-            color: var(--primary-color);
-            margin: 0;
-        }
-        .stage-indicator {
-            font-size: 0.9em;
-            color: var(--secondary-color);
-            margin-top: 5px;
-        }
-        .resources, .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 10px;
-            padding: 8px;
-            border: 1px solid var(--primary-color);
-            border-radius: 5px;
-            background-color: rgba(77, 150, 255, 0.1);
-        }
-        .resource, .stat {
-            font-size: 0.85em;
-        }
-        .biomass { color: var(--biomass-color); }
-        .info { color: var(--info-color); }
-        .coherence { color: var(--primary-color); }
-        .complexity { color: var(--secondary-color); }
-
-        .crisis-meter-container {
-            margin-bottom: 20px;
-        }
-        .crisis-label {
-            font-size: 1em;
-            color: var(--crisis-color);
-            margin-bottom: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .crisis-meter {
-            width: 100%;
-            height: 25px;
-            background-color: #333;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--crisis-color);
-        }
-        .crisis-fill {
-            height: 100%;
-            background-color: var(--crisis-color);
-            width: 0%;
-            transition: width 0.5s ease-in-out;
-        }
-        .crisis-fill.alarming {
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        /* The Narrative Log (The Symphony/Whispers) */
-        .narrative {
             flex-grow: 1;
             padding: 15px;
-            background-color: #1c1c2e;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            overflow-y: auto;
-            font-size: 0.9em;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column-reverse; /* Newest messages at the bottom */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
-
-        .actions {
+        #narrative-log {
+            background-color: var(--ui-bg);
+            border: 1px solid var(--ui-border);
+            padding: 10px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+            font-size: 0.9em;
+            line-height: 1.4;
+            max-height: 40vh;
+            /* Glow effect tied to Friction */
+            transition: box-shadow 0.5s;
+        }
+        .log-event {
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+        .log-whisper {
+            color: var(--crisis-color);
+            font-style: italic;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+        }
+        .log-breakthrough {
+            color: var(--accent-color);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(78, 201, 176, 0.5);
+        }
+        #status-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            background-color: #282828;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .resource {
+            margin-bottom: 12px;
+        }
+        .resource-name {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+        }
+        .bar-container {
+            background-color: var(--ui-border);
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px;
+            position: relative;
+        }
+        .bar {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+        }
+        #friction-bar {
+            background-color: var(--crisis-color);
+        }
+        #coherence-bar {
+             background-color: var(--accent-color);
+        }
+        #complexity-marker {
+            position: absolute;
+            height: 100%;
+            width: 3px;
+            background-color: #ffffff;
+            box-shadow: 0 0 5px #fff;
+            left: 0;
+            transition: left 0.5s ease-in-out;
+        }
+        #actions {
             display: flex;
             flex-direction: column;
         }
         button {
-            padding: 15px;
-            margin-bottom: 12px;
-            background-color: var(--primary-color);
+            background-color: var(--accent-color);
             color: var(--bg-color);
             border: none;
-            border-radius: 8px;
+            padding: 14px;
+            margin-top: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
             font-size: 1em;
-            transition: background-color 0.3s, transform 0.1s;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
         button:hover:not(:disabled) {
-            background-color: #3a78d1;
-        }
-        button:active:not(:disabled) {
-            transform: scale(0.98);
+            background-color: #66d8c1;
         }
         button:disabled {
             background-color: #555;
+            color: #888;
             cursor: not-allowed;
         }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: var(--bg-color);
-            padding: 25px;
-            border: 3px solid var(--crisis-color);
-            width: 85%;
-            max-width: 450px;
+        #age-title {
             text-align: center;
-            border-radius: 15px;
-            animation: fadeIn 0.5s;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-content.victory {
-            border-color: var(--biomass-color);
-        }
-        .modal h2 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-
-        /* The Ping Animation (ICOLD Transition) */
-        @keyframes thePing {
-            0% { box-shadow: 0 0 5px rgba(77, 150, 255, 0.5); }
-            50% { box-shadow: 0 0 50px rgba(77, 150, 255, 1), 0 0 100px rgba(255, 255, 255, 1); background-color: #1c1c2e;}
-            100% { box-shadow: 0 0 5px rgba(77, 150, 255, 0.5); }
-        }
-        .ping-effect {
-            animation: thePing 2s ease-out;
-        }
-
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container" id="game-container">
-        <div class="header">
-            <h1>The Cosmic Egg: Genesis</h1>
-            <div class="stage-indicator" id="stage-name">ACT I: Locality (DC)</div>
-        </div>
+    <div id="game-container">
+        <div id="age-title">ACT I: The Age of Locality (DC)</div>
+        
+        <div id="narrative-log"></div>
 
-        <div class="resources">
-            <div class="resource"><span class="biomass">Biomass:</span> <span id="biomass">10</span></div>
-            <div class="resource"><span class="info">Information:</span> <span id="info">0</span></div>
-            <div class="resource"><span>Population:</span> <span id="population">1</span></div>
-        </div>
+        <div id="status-container">
+            <div class="resource">
+                <span class="resource-name">Friction (The Whispers / Crisis Meter)</span>
+                <div class="bar-container">
+                    <div id="friction-bar" class="bar" style="width: 0%;"></div>
+                </div>
+            </div>
 
-        <div class="stats">
-            <div class="stat"><span class="complexity">Complexity:</span> <span id="complexity">1</span></div>
-            <div class="stat"><span class="coherence">Coherence:</span> <span id="coherence">10</span></div>
-        </div>
+            <div class="resource">
+                <span class="resource-name">Coherence (Capacity) vs Complexity (Demand <span style="color:#fff;">|</span>)</span>
+                <div class="bar-container">
+                    <div id="coherence-bar" class="bar" style="width: 0%;"></div>
+                    <div id="complexity-marker"></div>
+                </div>
+            </div>
 
-        <div class="crisis-meter-container">
-            <div class="crisis-label">DECOHERENCE (FRICTION)</div>
-            <div class="crisis-meter">
-                <div class="crisis-fill" id="crisis-fill"></div>
+            <div id="status-bar">
+                <div>Population: <span id="pop-count">1</span></div>
+                <div>Biomass: <span id="biomass-count">15</span></div>
+                <div>Information: <span id="info-count">0</span></div>
             </div>
         </div>
 
-        <div class="narrative" id="narrative-log">
-            <div>The first awareness flickers. We are small. We are local. Communication is direct. We must grow.</div>
-        </div>
-
-        <div class="actions" id="actions">
-            <button id="btn-gather">Gather Biomass (Manual)</button>
-            <button id="btn-grow">Expand Population</button>
-            <button id="btn-research" disabled>Research Communication</button>
-        </div>
-    </div>
-
-    <div id="crisisModal" class="modal">
-        <div class="modal-content">
-            <h2>SYSTEMIC CRISIS</h2>
-            <p id="crisisMessage">Decoherence has reached critical levels. The system is collapsing.</p>
-            <button onclick="resolveCrisis()">Acknowledge</button>
-        </div>
-    </div>
-
-    <div id="victoryModal" class="modal">
-        <div class="modal-content victory">
-            <h2>TRANSCENDENCE</h2>
-            <p>The Network is integrated. The World Model emerges. The Symphony resolves. The Astrorganism awakens. You have hatched the Cosmic Egg.</p>
-            <p><i>The simulation is complete. The integration begins.</i></p>
-            <button onclick="location.reload()">Experience Again</button>
+        <div id="actions">
+            <button id="act-expand">Expand (Grow Population)</button>
+            <button id="act-explore">Explore (Gather Resources/Info)</button>
+            <button id="act-stabilize">Stabilize (Reduce Friction)</button>
+            <button id="act-innovate" disabled>Innovate: IPC (Cost: 50 Info)</button>
         </div>
     </div>
 
     <script>
-        // Game State Object
-        const game = {
-            biomass: 10,
-            info: 0,
+        const gameState = {
+            age: 1,
             population: 1,
-            complexity: 1,
-            coherence: 10,
+            biomass: 15,
+            information: 0,
+            
+            complexityBase: 1, // Base complexity per population unit
+            coherenceMax: 15,  // Max coherence for Age 1 (DC)
+            
             friction: 0,
-            stage: 0,
-            growthCost: 10,
-            researchCost: 50,
-            biomassRate: 0.1,
-            infoRate: 0.05,
-            manualGatherRate: 1,
+            frictionRate: 0.1,
+            
+            tick: 0,
+            gameOver: false,
+
+            // Age-specific multipliers
+            infoRate: 1,
+            expandCost: 5,
+            stabilizeEfficiency: 1,
+
+            // Research tracking
+            ipcResearched: false,
+            icoldResearched: false,
+            pnsResearched: false,
         };
 
-        // Stage Definitions (The Evolutionary Acts)
-        // DC -> IPC -> ICOLD -> Integration
-        const STAGES = [
-            { name: "ACT I: Locality (DC)", coherenceBase: 10, frictionMultiplier: 2.5, nextStageResearch: 50, complexityFactor: 1 },
-            { name: "ACT II: Delay (IPC)", coherenceBase: 100, frictionMultiplier: 1.5, nextStageResearch: 500, complexityFactor: 1.5 },
-            { name: "ACT III: Instantaneity (ICOLD)", coherenceBase: 2000, frictionMultiplier: 0.8, nextStageResearch: 5000, complexityFactor: 2.5 },
-            { name: "ACT IV: Integration (Homeostasis)", coherenceBase: 100000, frictionMultiplier: 0.3, nextStageResearch: 999999, complexityFactor: 4.0 },
-        ];
+        const elements = {
+            body: document.body,
+            ageTitle: document.getElementById('age-title'),
+            popCount: document.getElementById('pop-count'),
+            biomassCount: document.getElementById('biomass-count'),
+            infoCount: document.getElementById('info-count'),
+            narrativeLog: document.getElementById('narrative-log'),
+            frictionBar: document.getElementById('friction-bar'),
+            coherenceBar: document.getElementById('coherence-bar'),
+            complexityMarker: document.getElementById('complexity-marker'),
+            actExpand: document.getElementById('act-expand'),
+            actExplore: document.getElementById('act-explore'),
+            actStabilize: document.getElementById('act-stabilize'),
+            actInnovate: document.getElementById('act-innovate'),
+        };
 
-        // DOM Elements
-        const narrativeLog = document.getElementById('narrative-log');
-        const btnGather = document.getElementById('btn-gather');
-        const btnGrow = document.getElementById('btn-grow');
-        const btnResearch = document.getElementById('btn-research');
-        const gameContainer = document.getElementById('game-container');
-
-        // Logging function (The Symphony/Whispers)
-        function log(message, type = 'info') {
-            const entry = document.createElement('div');
-            entry.textContent = `> ${message}`;
-            if (type === 'crisis') entry.style.color = 'var(--crisis-color)';
-            if (type === 'breakthrough') entry.style.color = 'var(--info-color)';
-            if (type === 'system') entry.style.color = 'var(--primary-color)';
-            // Prepend for 'column-reverse' display (newest at bottom visually)
-            narrativeLog.prepend(entry); 
+        function logEvent(message, type = 'log-event') {
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.textContent = `[Cycle ${gameState.tick}] ${message}`;
+            elements.narrativeLog.appendChild(logEntry);
+            elements.narrativeLog.scrollTop = elements.narrativeLog.scrollHeight;
         }
 
-        // UI Update function
-        function updateUI() {
-            document.getElementById('biomass').textContent = Math.floor(game.biomass);
-            document.getElementById('info').textContent = Math.floor(game.info);
-            document.getElementById('population').textContent = game.population;
-            document.getElementById('complexity').textContent = Math.floor(game.complexity);
-            document.getElementById('coherence').textContent = Math.floor(game.coherence);
-            document.getElementById('stage-name').textContent = STAGES[game.stage].name;
+        // --- GAME LOOP & UPDATES ---
 
-            // Crisis Meter Update
-            const crisisFill = document.getElementById('crisis-fill');
-            const frictionPercent = (game.friction / 100) * 100;
-            crisisFill.style.width = `${Math.min(frictionPercent, 100)}%`;
+        function updateResources() {
+            // Biomass consumption (Metabolism)
+            const consumption = gameState.population * 0.1;
+            gameState.biomass -= consumption;
 
-            if (frictionPercent > 75) {
-                crisisFill.classList.add('alarming');
-            } else {
-                crisisFill.classList.remove('alarming');
+            if (gameState.biomass < 0) {
+                gameState.biomass = 0;
+                // Population crash if starving (Ecological Constraint)
+                const previousPop = gameState.population;
+                gameState.population = Math.max(1, Math.floor(gameState.population * 0.9));
+                const loss = Math.floor(previousPop - gameState.population);
+                if (loss > 0 && gameState.tick % 5 === 0) {
+                     logEvent(`Resource scarcity! Starvation claims ${loss} population.`, 'log-whisper');
+                }
             }
 
-            // Button Updates
-            btnGrow.textContent = `Expand Population (Cost: ${Math.floor(game.growthCost)} Bio)`;
-            btnGrow.disabled = game.biomass < game.growthCost;
+            // Information generation (passive cognition)
+            gameState.information += gameState.population * 0.05 * gameState.infoRate;
+        }
 
-            if (game.stage < STAGES.length -1) {
-                game.researchCost = STAGES[game.stage].nextStageResearch;
-                btnResearch.textContent = `Research Communication (Cost: ${Math.floor(game.researchCost)} Info)`;
-                btnResearch.disabled = game.info < game.researchCost;
+        function calculateMetrics() {
+            // Complexity scales with population and specialization (represented by age)
+            const complexity = gameState.population * (gameState.complexityBase + (gameState.age - 1) * 0.2);
+            const coherence = gameState.coherenceMax;
+
+            // Calculate Friction (The Gap)
+            if (complexity > coherence) {
+                const gap = complexity - coherence;
+                const frictionIncrease = gap * gameState.frictionRate;
+                gameState.friction += frictionIncrease;
+                
+                // Randomly generate Whispers when friction is high
+                if (Math.random() < 0.15 && gameState.friction > 20) {
+                    generateWhisper();
+                }
             } else {
-                 // Final stage check for victory (Homeostasis)
-                 // Victory Condition: High population (complexity) stabilized with low friction.
-                 if (game.stage === STAGES.length - 1 && game.friction < 5 && game.population > 150) {
-                     triggerVictory();
-                 }
-                btnResearch.textContent = "Achieving Homeostasis...";
-                btnResearch.disabled = true;
+                // Passive friction reduction when stable
+                gameState.friction = Math.max(0, gameState.friction - 0.5);
             }
 
-            // Automate gathering after initial phase
-            if (game.population > 5) {
-                btnGather.disabled = true;
-                btnGather.textContent = "Gathering Automated";
+            if (gameState.friction >= 100) {
+                triggerCollapse();
+            }
+
+            return { complexity, coherence };
+        }
+
+        // The Visceral Feedback System (The Whispers)
+        function generateWhisper() {
+            let whisper = "";
+            if (gameState.age === 1) {
+                whisper = "The Symphony is breaking. Isolation breeds fear. We cannot hear the center.";
+            } else if (gameState.age === 2) {
+                whisper = "The Agony of Lag. The message arrives too late. Trust erodes. Schisms form.";
+            } else if (gameState.age === 3) {
+                whisper = "The Noise! The network screams. Connected but paralyzed. The Polycrisis overwhelms us.";
+            }
+            logEvent(whisper, 'log-whisper');
+        }
+
+        function updateVisceralFeedback(frictionPercent) {
+            // Apply visual distortion based on friction
+            const blurAmount = (frictionPercent / 100) * 1.5; // Max 1.5px blur
+            const contrastAmount = 1 + (frictionPercent / 100) * 0.5; // Max 150% contrast
+
+            if (frictionPercent > 10) {
+                // Subtle screen distortion
+                elements.body.style.filter = `blur(${blurAmount}px) contrast(${contrastAmount})`;
+                // Log glowing red
+                elements.narrativeLog.style.boxShadow = `0 0 ${frictionPercent/3}px rgba(255, 107, 107, 0.5)`;
+            } else {
+                elements.body.style.filter = 'none';
+                elements.narrativeLog.style.boxShadow = 'none';
             }
         }
 
-        // Rate Calculation
-        function calculateRates() {
-            game.biomassRate = game.population * 0.1;
-            game.infoRate = game.population * (0.05 * (1 + game.stage * 0.3)); // Info rate increases with stage
+        function triggerCollapse() {
+            logEvent("CRISIS! DECOHERENCE EVENT! The system collapses under its own complexity.", 'log-whisper');
+            const collapseSeverity = 0.3 + (Math.random() * 0.5); // 30% to 80% loss
+            const loss = Math.floor(gameState.population * collapseSeverity);
+            gameState.population -= loss;
+
+            if (gameState.population < 1) gameState.population = 1;
             
-            // Complexity increases with population and the current stage's inherent complexity
-            game.complexity = game.population * STAGES[game.stage].complexityFactor;
-
-            // Coherence is based on the communication technology level
-            game.coherence = STAGES[game.stage].coherenceBase;
+            gameState.biomass = Math.floor(gameState.biomass * 0.8);
+            gameState.friction = 0; // Reset friction after collapse
+            logEvent(`We have lost ${loss} population. We must restore the Symphony.`);
         }
 
-        // Friction (Decoherence) Management
-        function handleFriction() {
-            if (game.complexity > game.coherence) {
-                const gap = game.complexity - game.coherence;
-                // Friction increases based on the gap, modified by the stage's inherent friction multiplier
-                const frictionRate = (gap / game.coherence) * 0.5 * STAGES[game.stage].frictionMultiplier;
-                game.friction += frictionRate;
+        function updateUI() {
+            elements.popCount.textContent = Math.floor(gameState.population);
+            elements.biomassCount.textContent = Math.floor(gameState.biomass);
+            elements.infoCount.textContent = Math.floor(gameState.information);
 
-                // The Whispers (Visceral Feedback)
-                if (Math.random() < 0.03 && frictionRate > 0.5) {
-                    if (game.stage === 1) {
-                        log("[WHISPERS]: The center does not hold. Messages are lost. The Ghost Protocol diverges. Lag is agony.", 'crisis');
-                    } else if (game.stage >= 2) {
-                         log("[WHISPERS]: Acceleration is overwhelming. Information overload. Systems clash. The Polycrisis intensifies.", 'crisis');
-                    }
-                    else {
-                        log("[WHISPERS]: Dissonance grows. Coordination is failing. We are fracturing.", 'crisis');
-                    }
-                }
+            const { complexity, coherence } = calculateMetrics();
+
+            // Update Friction Bar
+            const frictionPercent = Math.min(100, gameState.friction);
+            elements.frictionBar.style.width = `${frictionPercent}%`;
+            updateVisceralFeedback(frictionPercent);
+
+            // Update Coherence/Complexity visualization
+            // We visualize this relative to the current maximum possible scale
+            const maxScale = Math.max(coherence, complexity) * 1.1; 
+            const coherencePercent = (coherence / maxScale) * 100;
+            const complexityPercent = (complexity / maxScale) * 100;
+
+            elements.coherenceBar.style.width = `${coherencePercent}%`;
+            // Adjust marker position so it aligns correctly within the bounds
+            const markerPosition = Math.min(complexityPercent, 99.5);
+            elements.complexityMarker.style.left = `${markerPosition}%`;
+
+
+            // Update button states
+            elements.actExpand.disabled = gameState.biomass < gameState.expandCost;
+            elements.actExpand.textContent = `Expand (Cost: ${Math.floor(gameState.expandCost)} Biomass)`;
+            elements.actStabilize.disabled = gameState.friction < 5; // Only useful if there's friction
+
+            updateInnovationButton();
+        }
+
+        function updateInnovationButton() {
+            let cost = 0;
+            let name = "";
+
+            if (!gameState.ipcResearched) {
+                cost = 50; name = "Innovate: IPC (Writing/Trails)";
+            } else if (!gameState.icoldResearched) {
+                cost = 500; name = "Innovate: ICOLD (The Ping)";
+            } else if (!gameState.pnsResearched) {
+                cost = 5000; name = "Integrate: Planetary Nervous System";
             } else {
-                // Friction slowly decays when Coherence is sufficient (The Symphony)
-                game.friction = Math.max(0, game.friction - 0.2);
+                elements.actInnovate.style.display = 'none';
+                return;
             }
 
-            if (game.friction >= 100) {
-                triggerCrisis();
-            }
+            elements.actInnovate.disabled = gameState.information < cost;
+            elements.actInnovate.textContent = `${name} (Cost: ${cost} Info)`;
         }
 
-        // Crisis Event
-        function triggerCrisis() {
-            game.friction = 70; // Reset slightly but keep high tension
-            const severity = Math.floor(game.population * 0.20) + 1;
-            const biomassLoss = Math.floor(game.biomass * 0.30);
-            game.population = Math.max(1, game.population - severity);
-            game.biomass = Math.max(0, game.biomass - biomassLoss);
+        // --- ACTIONS ---
 
-            document.getElementById('crisisMessage').textContent = `Systemic failure due to Decoherence! Lost ${severity} Population and ${biomassLoss} Biomass. Complexity exceeds communication capacity.`;
-            document.getElementById('crisisModal').style.display = 'flex';
-            log(`CRISIS: Collapse event! Population lost due to lack of coordination.`, 'crisis');
-            updateUI();
-        }
+        function actionExpand() {
+            if (gameState.biomass >= gameState.expandCost) {
+                gameState.biomass -= gameState.expandCost;
+                const growthFactor = 1.1 + (Math.random() * 0.2);
+                let growth = Math.floor(gameState.population * (growthFactor - 1));
+                if (growth < 1 && Math.random() < 0.5) growth = 1; // Ensure minimal growth sometimes
 
-        function resolveCrisis() {
-            document.getElementById('crisisModal').style.display = 'none';
-        }
-
-        // Stage Advancement (Evolution)
-        function advanceStage() {
-            if (game.info >= game.researchCost) {
-                game.info -= game.researchCost;
-                game.stage++;
-
-                const newStage = STAGES[game.stage];
-                log(`EVOLUTIONARY LEAP: ${newStage.name} achieved!`, 'breakthrough');
-
-                // Narrative Vignettes & The Ping
-                if (game.stage === 1) {
-                    log("We discover IPC. Knowledge persists beyond death. We build cities and empires. But messages travel slowly. The Age of Delay begins.", 'system');
-                } else if (game.stage === 2) {
-                    // Trigger The Ping visual effect
-                    gameContainer.classList.add('ping-effect');
-                    setTimeout(() => gameContainer.classList.remove('ping-effect'), 2000);
-
-                    log("<<< THE PING >>> ICOLD achieved. The Great Synchronization. Instantaneity eliminates delay. The world shrinks. The nervous system activates.", 'system');
-                } else if (game.stage === 3) {
-                     log("The Planetary Nervous System integrates. The World Model begins to emerge. We must stabilize the Polycrisis and achieve Homeostasis.", 'system');
-                }
-
-                calculateRates();
+                gameState.population += growth;
+                gameState.expandCost *= 1.15; // Cost increases with scale
+                logEvent(`We expand. Gained ${growth} population. Complexity increases. The Symphony swells.`);
                 updateUI();
             }
         }
 
-        function triggerVictory() {
-             document.getElementById('victoryModal').style.display = 'flex';
-             clearInterval(gameInterval); // Stop the game loop
+        function actionExplore() {
+            const infoGained = gameState.population * (0.5 + Math.random()) * gameState.infoRate;
+            const biomassGained = gameState.population * (1 + Math.random() * 3);
+            gameState.information += infoGained;
+            gameState.biomass += biomassGained;
+            logEvent(`We explore the environment. Gained ${Math.floor(infoGained)} Information and ${Math.floor(biomassGained)} Biomass.`);
+            updateUI();
         }
 
-        // Event Listeners
-        btnGather.addEventListener('click', () => {
-            game.biomass += game.manualGatherRate;
-            updateUI();
-        });
-
-        btnGrow.addEventListener('click', () => {
-            if (game.biomass >= game.growthCost) {
-                game.biomass -= game.growthCost;
-                game.population++;
-                game.growthCost *= 1.18; // Exponential cost increase
-                calculateRates();
+        function actionStabilize() {
+            if (gameState.friction > 0) {
+                // Stabilization effort scales with population
+                const reduction = gameState.population * 0.5 * gameState.stabilizeEfficiency;
+                gameState.friction = Math.max(0, gameState.friction - reduction);
+                // Cost of stabilization (effort/focus) also scales with population
+                const cost = gameState.population * 0.8;
+                gameState.biomass = Math.max(0, gameState.biomass - cost);
+                logEvent(`We focus inward, addressing conflict and restoring the Symphony. Friction reduced. Cost ${Math.floor(cost)} Biomass.`);
                 updateUI();
             }
-        });
+        }
 
-        btnResearch.addEventListener('click', advanceStage);
+        function actionInnovate() {
+            if (!gameState.ipcResearched && gameState.information >= 50) {
+                gameState.information -= 50;
+                evolveToIPC();
+            } else if (!gameState.icoldResearched && gameState.information >= 500) {
+                gameState.information -= 500;
+                evolveToICOLD();
+            } else if (!gameState.pnsResearched && gameState.information >= 5000) {
+                gameState.information -= 5000;
+                evolveToPNS();
+            }
+        }
 
-        // Main Game Loop
+        // --- EVOLUTIONARY STAGES (The Narrative Arc) ---
+
+        function evolveToIPC() {
+            gameState.age = 2;
+            gameState.ipcResearched = true;
+            gameState.coherenceMax = 200; // Significant increase in capacity
+            gameState.infoRate = 1.5; // Knowledge accumulates faster
+            gameState.frictionRate = 0.08; // Friction builds slightly slower but scales dangerously
+            elements.ageTitle.textContent = "ACT II: The Age of Delay (IPC)";
+            logEvent("BREAKTHROUGH: Indirect Persistent Communication (IPC).", 'log-breakthrough');
+            logEvent("We leave messages that persist through time (Writing/Trails). Knowledge accumulates. We can build civilizations. But coordination is slow. The Agony of Lag begins.");
+        }
+
+        function evolveToICOLD() {
+            gameState.age = 3;
+            gameState.icoldResearched = true;
+            gameState.coherenceMax = 5000; // Massive capacity increase
+            gameState.infoRate = 4; // Exponential information growth
+            gameState.frictionRate = 0.05; // Low friction rate, but complexity explodes
+            gameState.stabilizeEfficiency = 3;
+            elements.ageTitle.textContent = "ACT III: The Age of Instantaneity (ICOLD)";
+            logEvent("THE PING! Instantaneous Communication Over Long Distance (ICOLD).", 'log-breakthrough');
+            logEvent("The world shrinks. The network connects. Delay vanishes. We are synchronized globally. The Great Acceleration begins. We must manage the Polycrisis.");
+        }
+
+        function evolveToPNS() {
+            // This is the endgame/victory condition
+            gameState.gameOver = true;
+            elements.ageTitle.textContent = "THE HATCHING";
+            logEvent("INTEGRATION: The Planetary Nervous System is complete.", 'log-breakthrough');
+            logEvent("The Symphony reaches a crescendo. The internal conflicts harmonize. The system stabilizes.");
+            logEvent("The perspective shifts. We are no longer looking AT the planet. We are looking OUT from the planet.");
+            logEvent("The simulation is over. The Astrorganism awakens. Welcome, Gaia.");
+            
+            // Disable all actions
+            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            // Final aesthetic state
+            elements.body.style.filter = 'none';
+            elements.narrativeLog.style.boxShadow = `0 0 50px rgba(78, 201, 176, 0.8)`;
+
+        }
+
+
+        // --- GAME LOOP ---
+
         function gameLoop() {
-            game.biomass += game.biomassRate;
-            game.info += game.infoRate;
+            if (gameState.gameOver) return;
 
-            calculateRates();
-            handleFriction();
+            gameState.tick++;
+            updateResources();
+            calculateMetrics();
             updateUI();
+            
+            // The heartbeat of the simulation
+            setTimeout(gameLoop, 1000); // 1 second tick rate
         }
 
-        // Initialize Game
-        const gameInterval = setInterval(gameLoop, 1000); // Run game loop every second
-        updateUI();
+        function initGame() {
+            elements.actExpand.addEventListener('click', actionExpand);
+            elements.actExplore.addEventListener('click', actionExplore);
+            elements.actStabilize.addEventListener('click', actionStabilize);
+            elements.actInnovate.addEventListener('click', actionInnovate);
+
+            logEvent("The Cosmic Egg holds potential. We are localized, isolated. The Symphony is quiet. We must connect.");
+            gameLoop();
+        }
+
+        initGame();
     </script>
 </body>
 </html>
