@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The 4D Universe Spiral</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; font-family: 'Courier New', Courier, monospace; color: white; }
+        canvas { display: block; }
+        #ui-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            pointer-events: auto;
+            max-width: 300px;
+        }
+        h1 { font-size: 16px; margin-top: 0; color: #aaa; text-transform: uppercase; letter-spacing: 2px;}
+        .control-group { margin-bottom: 10px; }
+        label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+        input[type=range] { width: 100%; cursor: pointer; }
+        .value-display { float: right; color: #fff; }
+        button {
+            background: transparent; border: 1px solid #fff; color: #fff;
+            padding: 5px 10px; cursor: pointer; font-family: inherit;
+            transition: 0.2s; margin-right: 5px; font-size: 11px;
+        }
+        button:hover, button.active { background: #fff; color: #000; }
+        #math-modes { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .info { font-size: 10px; color: #666; margin-top: 15px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div id="ui-container">
+    <h1>4D Spiral Resonance</h1>
+    
+    <div class="control-group">
+        <label>Seed (Resonance Frequency) <span id="seed-val" class="value-display">0</span></label>
+        <input type="range" id="seed" min="0" max="1000" step="0.01" value="10">
+    </div>
+
+    <div class="control-group">
+        <label>Expansion (Zoom) <span id="zoom-val" class="value-display">50</span></label>
+        <input type="range" id="zoom" min="10" max="200" step="1" value="50">
+    </div>
+
+    <div class="control-group">
+        <label>Line Length (Dimensions) <span id="len-val" class="value-display">3000</span></label>
+        <input type="range" id="length" min="100" max="10000" step="100" value="3000">
+    </div>
+
+    <label>Mathematical Modifier:</label>
+    <div id="math-modes">
+        <button onclick="setMode('linear')" class="active" id="btn-linear">Linear</button>
+        <button onclick="setMode('log')" id="btn-log">Log</button>
+        <button onclick="setMode('golden')" id="btn-golden">Golden</button>
+        <button onclick="setMode('tan')" id="btn-tan">Tan</button>
+        <button onclick="setMode('noise')" id="btn-noise">Chaos</button>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <button onclick="toggleAuto()">Play/Stop Animation</button>
+    </div>
+
+    <div class="info">
+        Drag mouse to rotate 3D view.<br>
+        Scroll to zoom.<br>
+        Watch for emergent geometry (Cubes, Spheres) as the Seed value changes.
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+/**
+ * THE UNIVERSE SPIRAL 
+ * Based on the concept that a single 1D line, when folded through higher dimensions,
+ * can create volume and geometry.
+ */
+
+// --- SETUP SCENE ---
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.002);
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 100;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// --- THE SPIRAL LINE ---
+// We use BufferGeometry for performance with thousands of points
+const MAX_POINTS = 10000;
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(MAX_POINTS * 3); // 3 coords per point
+const colors = new Float32Array(MAX_POINTS * 3);    // 3 RGB values per point
+
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+// Material to make the line glow and handle vertex colors
+const material = new THREE.LineBasicMaterial({ 
+    vertexColors: true,
+    linewidth: 1, // Note: WebGL renderer often limits line width to 1
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    opacity: 0.8
+});
+
+const line = new THREE.Line(geometry, material);
+scene.add(line);
+
+// --- VARIABLES ---
+let time = 0;
+let autoPlay = true;
+let mode = 'linear';
+let params = {
+    seed: 10,
+    zoom: 50,
+    length: 3000
+};
+
+// --- MATH FUNCTIONS ---
+const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+
+function getModifier(i, angle, mode) {
+    switch(mode) {
+        case 'log': return Math.log(i + 1) * params.seed;
+        case 'golden': return i * PHI * params.seed * 0.1;
+        case 'tan': return Math.tan(angle) * 10;
+        case 'noise': return Math.sin(i * 0.1) * Math.cos(angle) * 10;
+        default: return 0; // Linear
+    }
+}
+
+// --- UPDATE LOOP ---
+function updateSpiral() {
+    const positions = line.geometry.attributes.position.array;
+    const colors = line.geometry.attributes.color.array;
+    
+    const pointCount = parseInt(params.length);
+    const seed = parseFloat(params.seed);
+    const expansion = parseFloat(params.zoom);
+
+    // To visualize 4D in 3D, we treat the points as lying on a hypersphere
+    // mapped down to 3D space using spherical rotation.
+    
+    for (let i = 0; i < pointCount; i++) {
+        // Normalized progress (0 to 1)
+        const t = i / pointCount; 
+        
+        // Base Angle (The Spiral)
+        // By multiplying i by the seed, we look for resonance.
+        // If Seed is an integer, we get overlapping loops.
+        let theta = i * (seed * 0.001); 
+        let phi = i * (seed * 0.001) * PHI; // Golden angle offset for 3D spherical packing
+
+        // Apply math modifiers
+        let mod = getModifier(i, theta, mode);
+        
+        // Calculate Radius
+        // We want the radius to breathe or spiral in
+        let r = expansion; 
+        
+        // If we want to simulate "collapsing into itself", radius varies by angle
+        if (mode === 'linear') {
+            // Spherical spiral
+            r = expansion * Math.sin(i * 0.01 + time * 0.5) + (i * 0.01);
+        } else if (mode === 'log') {
+             // Logarithmic spiral
+             r = (Math.log(i + 1) * 10) + mod;
+        } else {
+            r = expansion + mod;
+        }
+
+        // Convert Spherical (r, theta, phi) to Cartesian (x, y, z)
+        // This is the logic that creates the 3D form from the 1D line
+        let x = r * Math.sin(theta) * Math.cos(phi);
+        let y = r * Math.sin(theta) * Math.sin(phi);
+        let z = r * Math.cos(theta);
+
+        // 4D Rotation trick: Rotate the coordinates over time to simulate 
+        // the object turning through the 4th dimension
+        const rotSpeed = 0.0005;
+        const tempX = x * Math.cos(time * rotSpeed) - z * Math.sin(time * rotSpeed);
+        const tempZ = x * Math.sin(time * rotSpeed) + z * Math.cos(time * rotSpeed);
+        x = tempX; 
+        z = tempZ;
+
+        // Update Geometry
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        // Coloring based on index (Time) and Position
+        // This creates the "rainbow" effect showing the timeline of the spiral
+        const rCol = Math.sin(t * 10 + time) * 0.5 + 0.5;
+        const gCol = Math.sin(t * 15 + time + 2) * 0.5 + 0.5;
+        const bCol = Math.sin(t * 20 + time + 4) * 0.5 + 0.5;
+
+        colors[i * 3] = rCol;
+        colors[i * 3 + 1] = gCol;
+        colors[i * 3 + 2] = bCol;
+    }
+
+    line.geometry.setDrawRange(0, pointCount);
+    line.geometry.attributes.position.needsUpdate = true;
+    line.geometry.attributes.color.needsUpdate = true;
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (autoPlay) {
+        // Slowly shift the seed to find resonance frequencies automatically
+        params.seed = parseFloat(params.seed) + 0.02;
+        document.getElementById('seed').value = params.seed;
+        document.getElementById('seed-val').innerText = parseFloat(params.seed).toFixed(2);
+        time += 1;
+    }
+
+    updateSpiral();
+    
+    // Simple camera orbit
+    // camera.rotation.z += 0.001;
+    
+    renderer.render(scene, camera);
+}
+
+// --- INTERACTION ---
+
+// Mouse rotation logic (Simple orbit)
+let isDragging = false;
+let previousMousePosition = { x: 0, y: 0 };
+
+document.addEventListener('mousedown', () => isDragging = true);
+document.addEventListener('mouseup', () => isDragging = false);
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        const deltaMove = {
+            x: e.offsetX - previousMousePosition.x,
+            y: e.offsetY - previousMousePosition.y
+        };
+        
+        const deltaRotationQuaternion = new THREE.Quaternion()
+            .setFromEuler(new THREE.Euler(
+                toRadians(deltaMove.y * 1),
+                toRadians(deltaMove.x * 1),
+                0,
+                'XYZ'
+            ));
+        
+        line.quaternion.multiplyQuaternions(deltaRotationQuaternion, line.quaternion);
+    }
+    previousMousePosition = { x: e.offsetX, y: e.offsetY };
+});
+
+// Zoom (Scroll)
+document.addEventListener('wheel', (e) => {
+    camera.position.z += e.deltaY * 0.1;
+});
+
+function toRadians(angle) { return angle * (Math.PI / 180); }
+
+// UI Binding
+document.getElementById('seed').addEventListener('input', (e) => {
+    params.seed = e.target.value;
+    document.getElementById('seed-val').innerText = params.seed;
+    autoPlay = false; // Stop auto play if user interacts
+});
+document.getElementById('zoom').addEventListener('input', (e) => {
+    params.zoom = e.target.value;
+    document.getElementById('zoom-val').innerText = params.zoom;
+});
+document.getElementById('length').addEventListener('input', (e) => {
+    params.length = e.target.value;
+    document.getElementById('len-val').innerText = params.length;
+});
+
+function toggleAuto() { autoPlay = !autoPlay; }
+
+function setMode(newMode) {
+    mode = newMode;
+    // Update UI classes
+    document.querySelectorAll('#math-modes button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + newMode).classList.add('active');
+}
+
+// Handle Window Resize
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Start
+animate();
+
+</script>
+</body>
+</html>
