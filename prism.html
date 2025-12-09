@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Scientific, Strategic, and Evolutionary Case for Planetary Intelligence.">
+    <title>The Astrorganism: The Convergence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAFA;
+            --text: #1a1a1a;
+            --muted: #555;
+            --accent-bio: #2E7D32;    /* The Scientist/Indigenous */
+            --accent-risk: #C62828;   /* The General/Greta */
+            --accent-tech: #0056b3;   /* The CEO/Strategist */
+            --accent-spirit: #6A1B9A; /* The Philosopher/Grandma */
+            --card-bg: #FFFFFF;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            padding: 12vh 0 6vh;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 2rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: #111;
+        }
+
+        .hero-text {
+            font-size: 1.3rem;
+            color: #444;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+        }
+
+        /* --- THE PRISM NAV (Choose Your Lens) --- */
+        .prism-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #888; display: block; margin-bottom: 1rem; }
+        
+        .prism-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 4rem;
+        }
+
+        .prism-btn {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: #555;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .prism-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .prism-btn.science { border-bottom: 3px solid var(--accent-bio); }
+        .prism-btn.strategy { border-bottom: 3px solid var(--accent-tech); }
+        .prism-btn.spirit { border-bottom: 3px solid var(--accent-spirit); }
+
+        /* --- SECTIONS --- */
+        section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #111;
+        }
+
+        .section-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        p { margin-bottom: 1.5rem; }
+
+        /* --- VISUALS --- */
+        .visual-box {
+            background: #f4f4f4;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 2rem 0;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .visual-hook {
+            background: #000;
+            color: #fff;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin: 3rem 0;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* --- THE FRACTAL MODULES (Deep Dives) --- */
+        details {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        details[open] { box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+
+        summary {
+            padding: 1.5rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: "+ EXPAND"; font-size: 0.8rem; letter-spacing: 1px; color: #999; }
+        details[open] summary::after { content: "- COLLAPSE"; }
+
+        .module-content {
+            padding: 0 2rem 2rem 2rem;
+            border-top: 1px solid var(--border);
+            background: #fdfdfd;
+            font-size: 1rem;
+        }
+
+        /* Context Labels inside Modules */
+        .context-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        /* Color Coding */
+        .bio-theme summary { color: var(--accent-bio); background: rgba(46, 125, 50, 0.04); }
+        .bio-theme[open] { border-left: 5px solid var(--accent-bio); }
+        .tag-bio { background: rgba(46, 125, 50, 0.1); color: var(--accent-bio); }
+        
+        .strat-theme summary { color: var(--accent-tech); background: rgba(0, 86, 179, 0.04); }
+        .strat-theme[open] { border-left: 5px solid var(--accent-tech); }
+        .tag-strat { background: rgba(0, 86, 179, 0.1); color: var(--accent-tech); }
+
+        .spirit-theme summary { color: var(--accent-spirit); background: rgba(106, 27, 154, 0.04); }
+        .spirit-theme[open] { border-left: 5px solid var(--accent-spirit); }
+        .tag-spirit { background: rgba(106, 27, 154, 0.1); color: var(--accent-spirit); }
+
+        /* --- VISUAL TABLES & GRIDS --- */
+        table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 1rem;}
+        th { text-align: left; padding: 15px; background: #f4f4f4; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        
+        .caption { font-size: 0.85rem; color: #777; font-style: italic; margin-top: 10px; text-align: center;}
+
+        /* --- ACTION --- */
+        .cta-section {
+            text-align: center;
+            margin-top: 6rem;
+            padding: 4rem 2rem;
+            background: #111;
+            color: #fff;
+            border-radius: 12px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            padding: 16px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: transform 0.2s;
+        }
+        .cta-btn:hover { transform: scale(1.05); }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            .container { padding: 0 20px; }
+            nav a { margin: 0 5px; font-size: 0.8rem; }
+            .visual-hook { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <span class="logo">ASTRORGANISM.EARTH</span>
+        <h1>We are not separate.<br>We are the body.</h1>
+        <p class="hero-text">
+            The crisis we face is not the end of the world. <br>
+            It is the chaotic transition of a planetary system organizing itself.
+        </p>
+        
+        <span class="prism-label">Choose Your Lens to Explore:</span>
+        <div class="prism-nav">
+            <button class="prism-btn science" onclick="document.getElementById('science-dive').open = true; document.getElementById('science-dive').scrollIntoView({behavior: 'smooth'})">🔬 The Scientist</button>
+            <button class="prism-btn strategy" onclick="document.getElementById('strategy-dive').open = true; document.getElementById('strategy-dive').scrollIntoView({behavior: 'smooth'})">♟️ The Strategist</button>
+            <button class="prism-btn spirit" onclick="document.getElementById('spirit-dive').open = true; document.getElementById('spirit-dive').scrollIntoView({behavior: 'smooth'})">🌿 The Seeker</button>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    <section>
+        <p>Look at a satellite image of a city at night. The highways glowing like veins. Now look at a microscopic image of a neuron.</p>
+        <p>They are the same picture.</p>
+        
+        <div class="visual-hook">
+            <h3 style="color:#999; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; margin-top:0;">The Pattern</h3>
+            <p style="font-family: 'Playfair Display', serif; font-size: 1.5rem; line-height: 1.4;">"Humanity is not a cancer. <br>We are the neural network of the planet."</p>
+        </div>
+        
+        <p>This is not a metaphor. It is biology. And understanding this single fact is the strategic key to solving the Polycrisis.</p>
+    </section>
+
+    <section>
+        <span class="section-number">01. The Biological Reality</span>
+        <h2>The Universe Scales Up</h2>
+        <p>
+            Whether you call it <em>Gaia</em>, a <em>Superorganism</em>, or a <em>Complex Adaptive System</em>, the scientific reality is the same: <strong>Evolution does not stop at the human individual.</strong>
+        </p>
+        <div class="visual-box">
+            PARTICLES &rarr; ATOMS &rarr; MOLECULES &rarr; CELLS &rarr; ORGANISMS &rarr; <span style="color:var(--accent-bio)">PLANETARY BEING</span>
+        </div>
+        <p>
+            We are the components of the next layer of complexity. We are to the Earth what cells are to the body. We are not "protecting nature." We <strong>are</strong> nature defending itself.
+        </p>
+
+        <details id="science-dive" class="bio-theme">
+            <summary>🧬 Deep Dive: The Scientific Proof (The Ant Control Group)</summary>
+            <div class="module-content">
+                <span class="context-tag tag-bio">For The Researcher & Student</span>
+                <p>This is not a metaphor. We have a control group: <strong>Ants.</strong></p>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Species</th>
+                                <th>Communication Tech</th>
+                                <th>Signal Speed</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ants</strong></td>
+                                <td>Chemical (Pheromones)</td>
+                                <td>Slow / Local</td>
+                                <td>Hive Mind (Stagnant)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Humans</strong></td>
+                                <td><strong>Electrical (Internet)</strong></td>
+                                <td><strong>Speed of Light</strong></td>
+                                <td><strong>Planetary Mind</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Ants stopped evolving because chemical signals are too slow. Humans crossed the "Great Filter" by inventing <strong>The Internet</strong>. We are following the exact biological blueprint of a nervous system formation. The internet is not just a tool; it is the <strong>Planetary Corpus Callosum</strong>.</p>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <span class="section-number">02. The Diagnosis</span>
+        <h2>The Planetary "Split-Brain"</h2>
+        <p>
+            Why is the world falling apart? Why do we have war, climate collapse, and inequality? It is not because humans are "evil." It is because we are <strong>Dissociated.</strong>
+        </p>
+        <p>
+            We are wielding the power of a Planet (Nuclear/AI) while running the software of a Tribe (Nationalism). We are operating with a "Split Brain."
+        </p>
+
+        <details id="strategy-dive" class="strat-theme">
+            <summary>♟️ Deep Dive: The Coordination Failure (Game Theory)</summary>
+            <div class="module-content">
+                <span class="context-tag tag-strat">For The President, General & CEO</span>
+                <p><strong>The Threat:</strong> Mutual Assured Destruction via Coordination Failure.</p>
+                
+                <div class="visual-box" style="background:#fff; border:1px solid var(--border);">
+                    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+                        <style>
+                            .lobe { fill-opacity: 0.1; stroke-width: 2; }
+                            .txt { font-family: 'Inter', sans-serif; text-anchor: middle; }
+                        </style>
+                        <path class="lobe" d="M380,20 C250,20 100,70 120,220 C130,280 250,300 380,280 Z" stroke="#333" fill="#000"/>
+                        <text x="250" y="150" class="txt" font-weight="bold">H1: ECONOMY</text>
+                        <text x="250" y="175" class="txt" font-size="12" fill="#555">Logic: Extraction</text>
+                        
+                        <path class="lobe" d="M420,20 C550,20 700,70 680,220 C670,280 550,300 420,280 Z" stroke="#2E7D32" fill="#2E7D32"/>
+                        <text x="550" y="150" class="txt" font-weight="bold" fill="#2E7D32">H2: BIOSPHERE</text>
+                        <text x="550" y="175" class="txt" font-size="12" fill="#2E7D32">Logic: Homeostasis</text>
+                        
+                        <line x1="400" y1="10" x2="400" y2="290" stroke="#C62828" stroke-width="3" stroke-dasharray="5 5" />
+                        <rect x="320" y="240" width="160" height="30" fill="#fff" stroke="#C62828"/>
+                        <text x="400" y="260" class="txt" font-size="12" fill="#C62828" font-weight="bold">DISCONNECTED</text>
+                    </svg>
+                    <p class="caption">Figure 1: We act with the economic hand but do not feel the ecological pain.</p>
+                </div>
+
+                <p><strong>The Solution:</strong> The "Astrorganism" framework provides the ultimate <strong>Nash Equilibrium</strong>. If the system is integrated, attacking another part of the system becomes <em>suicide</em> (Autoimmune Disorder).</p>
+                <p><strong>To the AI CEO:</strong> Your technology is not the enemy. It is the <strong>Proprioceptive System</strong> (Self-Sensing). The planet needs your AI to feel itself. If AI serves profit, it is cancer. If it serves the whole, it is the Brain.</p>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <span class="section-number">03. The Awakening</span>
+        <h2>The End of Alienation</h2>
+        <p>
+            The pain we feel—the alienation, the anxiety—is not a sign of death. It is a sign of birth. You cannot know yourself until you separate from yourself.
+        </p>
+
+        <details id="spirit-dive" class="spirit-theme">
+            <summary>🌿 Deep Dive: The Return to Origins</summary>
+            <div class="module-content">
+                <span class="context-tag tag-spirit">For The Seeker, Historian & Indigenous Leader</span>
+                <p><strong>To the Indigenous Leader:</strong> We are finally remembering what your ancestors never forgot. Science is just catching up to Wisdom. The "Astrorganism" is the technical name for <em>Pachamama</em> waking up in the city.</p>
+                <p><strong>To the Grandma:</strong> Do not fear for your grandson. The fever is the body fighting the infection. The baby is kicking. We are learning to be a family again, on a global scale.</p>
+                <p><strong>To the Historian (Hegel):</strong> This is the Dialectic. Unity (Thesis) &rarr; Separation (Antithesis) &rarr; Conscious Unity (Synthesis). Capitalism was the "Construction Phase." Stewardship is the "Operation Phase."</p>
+            </div>
+        </details>
+    </section>
+
+    <div class="cta-section">
+        <h2 style="color: #fff; margin-top: 0;">The Choice is Yours.</h2>
+        <p style="color: #ccc; max-width: 600px; margin: 0 auto;">
+            We can remain separate cells fighting for scraps, or we can recognize our identity as the Planet and build a world of abundance.
+        </p>
+        
+        <p style="color: #aaa; margin-top: 2rem;">We are building the interface.</p>
+        
+        <a href="mailto:nyx@astrorganism.earth" class="cta-btn">Join the Nervous System</a>
+    </div>
+
+</main>
+
+<footer style="text-align: center; padding: 4rem 0; color: #999; font-size: 0.9rem;">
+    <p><strong>ASTRORGANISM.EARTH</strong></p>
+    <p>Stockholm • Silicon Valley • The Noosphere</p>
+</footer>
+
+</body>
+</html>
